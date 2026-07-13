@@ -115,6 +115,44 @@
   .dim{opacity:.22;transition:opacity .3s}
   .glow{filter:drop-shadow(0 0 10px #ffd76b)}
   .link{stroke:#ffb84d;stroke-width:4;stroke-linecap:round;opacity:.85}
+
+  /* ===== スマホ縦（狭い画面）：縦積み＋文字拡大 ===== */
+  @media (max-width:640px){
+    body{overflow:auto}
+    .app{height:auto;min-height:100dvh;padding:10px 12px 18px}
+    header{flex-wrap:wrap;gap:8px}
+    .logo{font-size:25px}
+    .sub{display:none}
+    .pdflink{margin-left:0;order:3;font-size:13px;padding:7px 12px}
+    .tabs{margin-left:auto;padding:5px}
+    .tab{font-size:15px;padding:9px 16px}
+    main{flex-direction:column;gap:10px;margin-top:10px}
+    .stage{flex:none;height:44vh;min-height:300px;border-radius:18px}
+    svg#board{max-height:100%}
+    .panel{flex:none}
+    .card{padding:16px;border-radius:18px}
+    .step-tag{font-size:13px}
+    .step-title{font-size:22px;margin:8px 0 6px}
+    .step-body{font-size:16px;line-height:1.65}
+    .learn{gap:8px}
+    .chip{font-size:13px;padding:6px 11px}
+    .nav{flex-wrap:wrap;gap:8px;margin-top:12px}
+    .dots{width:100%;margin:0 0 4px;justify-content:center}
+    .dot{width:9px;height:9px;min-width:9px;min-height:9px}
+    .btn{font-size:16px;padding:11px 18px;flex:1;min-width:110px}
+    #actBtn{flex-basis:100%}
+    /* play mode */
+    .turnbar{padding:12px}
+    .whoBubble{width:46px;height:46px;min-width:46px;min-height:46px;font-size:24px}
+    .turntext{font-size:17px}
+    .turntext .num{font-size:26px}
+    .hint{font-size:13px}
+    .scorewrap{gap:10px}
+    .score{padding:12px 8px}
+    .score .lab{font-size:14px}
+    .score .val{font-size:36px}
+    .result-msg{font-size:24px}
+  }
 </style>
 
 <div class="app">
