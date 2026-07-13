@@ -1,0 +1,410 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ブラックホール｜紙とペンの2人対戦レク</title>
+<meta property="og:title" content="ブラックホール｜紙とペンの2人対戦レク">
+<meta property="og:description" content="海外でバズった思考力ゲーム「ブラックホール」を、1手ずつ再生＆その場で対戦できるインタラクティブ説明。学級レク用・投影対応。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=M+PLUS+Rounded+1c:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#ff6b81; --red-d:#e8455f; --red-soft:#ffe1e6;
+    --blue:#3f97e8; --blue-d:#2b78c4; --blue-soft:#dbeeff;
+    --hole:#3a2b52; --hole2:#1c1230;
+    --cream:#fff9f0; --ink:#4a4038; --line:#e7ddce;
+    --accent:#7bc96f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Zen Maru Gothic","M PLUS Rounded 1c",system-ui,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, #fff3e0 0%, transparent 60%),
+      radial-gradient(1000px 600px at 100% 110%, #eaf3ff 0%, transparent 55%),
+      var(--cream);
+    color:var(--ink); overflow:hidden;
+  }
+  .app{height:100vh;display:flex;flex-direction:column;padding:1.4vh 1.6vw}
+  header{display:flex;align-items:center;gap:1.2vw;flex:0 0 auto}
+  .logo{font-family:"M PLUS Rounded 1c";font-weight:800;font-size:min(3.4vw,40px);
+    display:flex;align-items:center;gap:.5vw;letter-spacing:.02em}
+  .hole-badge{width:1.3em;height:1.3em;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#6a5088,var(--hole) 55%,var(--hole2));
+    box-shadow:0 0 0 3px #fff,0 0 18px rgba(58,43,82,.5),inset -4px -4px 8px rgba(0,0,0,.4);
+    display:inline-block}
+  .sub{font-size:min(1.6vw,18px);color:#9a8f80;font-weight:700}
+  .pdflink{margin-left:auto;text-decoration:none;font-weight:800;font-size:min(1.6vw,17px);
+    color:#c98a1e;background:#fff6e6;border:2px solid #ffe0a3;padding:.7vh 1.2vw;border-radius:999px;
+    display:inline-flex;align-items:center;gap:.3em}
+  .pdflink:hover{background:#ffefcf}
+  .tabs{margin-left:auto;display:flex;gap:.6vw;background:#fff;padding:.5vh .5vw;
+    border-radius:999px;box-shadow:0 4px 14px rgba(150,120,80,.15)}
+  .tab{border:none;cursor:pointer;font-family:inherit;font-weight:800;
+    font-size:min(1.9vw,20px);padding:.8vh 1.6vw;border-radius:999px;background:transparent;color:#b7ab9a}
+  .tab.on{background:linear-gradient(135deg,#ffd36b,#ff9a6b);color:#fff;
+    box-shadow:0 4px 10px rgba(255,150,90,.4)}
+  main{flex:1 1 auto;display:flex;gap:1.6vw;min-height:0;margin-top:1.2vh}
+  .stage{flex:1 1 58%;background:#fff;border-radius:26px;position:relative;
+    box-shadow:0 10px 30px rgba(160,130,90,.16);border:3px solid #fff;
+    display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .stage::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(600px 400px at 50% 40%,#fffaf0,#fff)}
+  svg#board{position:relative;width:100%;height:100%;max-height:92%}
+  .panel{flex:1 1 42%;display:flex;flex-direction:column;min-height:0}
+  .card{background:#fff;border-radius:24px;padding:2.4vh 1.8vw;flex:1 1 auto;
+    box-shadow:0 10px 26px rgba(160,130,90,.14);display:flex;flex-direction:column;overflow:hidden}
+  .step-tag{display:inline-flex;align-self:flex-start;align-items:center;gap:.4em;
+    background:var(--red-soft);color:var(--red-d);font-weight:800;
+    font-size:min(1.7vw,17px);padding:.5vh 1vw;border-radius:999px}
+  .step-title{font-family:"M PLUS Rounded 1c";font-weight:800;
+    font-size:min(3.4vw,38px);line-height:1.25;margin:1.4vh 0 1vh}
+  .step-body{font-size:min(2.1vw,22px);line-height:1.7;font-weight:500}
+  .step-body b{color:var(--red-d)}
+  .step-body .bl{color:var(--blue-d)}
+  .grow{flex:1 1 auto}
+  .nav{display:flex;align-items:center;gap:1vw;margin-top:1.4vh}
+  .dots{display:flex;gap:.5vw;margin-right:auto}
+  .dot{width:.9vw;height:.9vw;min-width:9px;min-height:9px;border-radius:50%;background:#ecdfcb}
+  .dot.on{background:var(--red);transform:scale(1.25)}
+  .btn{border:none;cursor:pointer;font-family:inherit;font-weight:800;
+    font-size:min(2vw,20px);padding:1.1vh 2vw;border-radius:999px;
+    background:linear-gradient(135deg,#7bd07a,#57b56f);color:#fff;
+    box-shadow:0 5px 12px rgba(90,180,110,.4)}
+  .btn.ghost{background:#f3ece0;color:#9a8f80;box-shadow:none}
+  .btn:disabled{opacity:.4;cursor:default}
+  .learn{display:flex;gap:.7vw;flex-wrap:wrap;margin-top:1.2vh}
+  .chip{background:#fff6e6;border:2px solid #ffe0a3;color:#c98a1e;font-weight:800;
+    font-size:min(1.7vw,17px);padding:.6vh 1.1vw;border-radius:14px}
+  /* play mode */
+  .turnbar{display:flex;align-items:center;gap:1vw;background:#fff;border-radius:20px;
+    padding:1.4vh 1.4vw;box-shadow:0 8px 20px rgba(160,130,90,.14)}
+  .whoBubble{width:3.6vw;height:3.6vw;min-width:44px;min-height:44px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;
+    font-family:"M PLUS Rounded 1c";font-size:min(2.4vw,26px)}
+  .turn-red .whoBubble{background:linear-gradient(135deg,#ff8a9c,var(--red-d))}
+  .turn-blue .whoBubble{background:linear-gradient(135deg,#6cb6f2,var(--blue-d))}
+  .turntext{font-weight:800;font-size:min(2.2vw,23px)}
+  .turntext .num{font-family:"M PLUS Rounded 1c";font-size:min(3.2vw,34px);vertical-align:-2px}
+  .scorewrap{display:flex;gap:1vw;margin-top:1.4vh}
+  .score{flex:1;background:#fff;border-radius:18px;padding:1.4vh 1vw;text-align:center;
+    box-shadow:0 6px 16px rgba(160,130,90,.12);border:3px solid transparent}
+  .score.red{border-color:var(--red-soft)} .score.blue{border-color:var(--blue-soft)}
+  .score .lab{font-weight:800;font-size:min(1.7vw,18px)}
+  .score.red .lab{color:var(--red-d)} .score.blue .lab{color:var(--blue-d)}
+  .score .val{font-family:"M PLUS Rounded 1c";font-weight:800;font-size:min(4.2vw,46px);line-height:1}
+  .score.win{background:#fffbe9;border-color:#ffd76b;box-shadow:0 0 0 4px #fff4c8,0 8px 20px rgba(230,180,40,.3)}
+  .result-msg{text-align:center;font-family:"M PLUS Rounded 1c";font-weight:800;
+    font-size:min(3vw,32px);margin-top:1.4vh;min-height:1.2em}
+  .hint{font-size:min(1.7vw,17px);color:#a99e8d;font-weight:600;line-height:1.6;margin-top:1vh}
+  /* svg cell */
+  .cellCircle{fill:#fff;stroke:#e3d8c6;stroke-width:2.5;cursor:default;transition:fill .2s,stroke .2s;
+    transform-box:fill-box;transform-origin:center}
+  .play .cellCircle.empty{cursor:pointer}
+  .play .cellCircle.empty:hover{fill:#fff6df;stroke:#ffcf6b}
+  .cellText{font-family:"M PLUS Rounded 1c";font-weight:800;font-size:30px;
+    text-anchor:middle;dominant-baseline:central;pointer-events:none;
+    transform-box:fill-box;transform-origin:center}
+  .pop{animation:pop .3s ease}
+  @keyframes pop{0%{transform:scale(.2);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+  .inkpop{animation:ink .55s cubic-bezier(.2,.9,.25,1.2)}
+  @keyframes ink{0%{transform:scale(.08);opacity:.4}55%{transform:scale(1.22)}100%{transform:scale(1);opacity:1}}
+  .target{animation:target 1s ease-in-out infinite}
+  @keyframes target{0%,100%{stroke:#ffbf47;stroke-width:4}50%{stroke:#ff8a3d;stroke-width:6}}
+  .holeFx{pointer-events:none}
+  .dim{opacity:.22;transition:opacity .3s}
+  .glow{filter:drop-shadow(0 0 10px #ffd76b)}
+  .link{stroke:#ffb84d;stroke-width:4;stroke-linecap:round;opacity:.85}
+</style>
+
+<div class="app">
+  <header>
+    <div class="logo"><span class="hole-badge"></span>ブラックホール</div>
+    <div class="sub">紙とペンだけ・2人対戦の思考力ゲーム</div>
+    <a class="pdflink" href="ブラックホール_対戦シート.pdf" target="_blank" rel="noopener">🖨 対戦シート（印刷用PDF）</a>
+    <div class="tabs">
+      <button class="tab on" id="tabRule">① ルール説明</button>
+      <button class="tab" id="tabPlay">② やってみる</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="stage">
+      <svg id="board" viewBox="0 0 600 500"></svg>
+    </div>
+
+    <!-- RULE PANEL -->
+    <div class="panel" id="rulePanel">
+      <div class="card">
+        <span class="step-tag" id="stepTag">STEP 1 / 5</span>
+        <div class="step-title" id="stepTitle"></div>
+        <div class="step-body" id="stepBody"></div>
+        <div class="grow"></div>
+        <div class="learn" id="learnChips" style="display:none">
+          <span class="chip">🔮 先を読む力</span>
+          <span class="chip">🧠 考える力</span>
+          <span class="chip">♟️ 戦略力</span>
+        </div>
+        <div class="nav">
+          <div class="dots" id="dots"></div>
+          <button class="btn" id="actBtn" style="display:none;background:linear-gradient(135deg,#5b4a7a,#2e2148)">🖤 ぬりつぶす！</button>
+          <button class="btn ghost" id="prevBtn">もどる</button>
+          <button class="btn" id="nextBtn">つぎへ ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLAY PANEL -->
+    <div class="panel" id="playPanel" style="display:none">
+      <div class="card">
+        <div class="turnbar" id="turnBar">
+          <div class="whoBubble" id="whoBubble">赤</div>
+          <div class="turntext" id="turnText">赤の番　→　<span class="num">1</span> を書こう</div>
+        </div>
+        <div class="hint">空いている○をタップ／クリックすると、いまの色の数字が入るよ。<br>交互に 1→10 を書いて、最後に残る1マスが <b>ブラックホール</b>🕳️</div>
+        <div class="scorewrap" id="scoreWrap" style="display:none">
+          <div class="score red" id="scoreRed"><div class="lab">🔴 赤の合計</div><div class="val" id="valRed">0</div></div>
+          <div class="score blue" id="scoreBlue"><div class="lab">🔵 青の合計</div><div class="val" id="valBlue">0</div></div>
+        </div>
+        <div class="result-msg" id="resultMsg"></div>
+        <div class="grow"></div>
+        <div class="hint" id="playFoot">合計が <b>小さい方が勝ち</b>！ ブラックホールに吸い込まれた自分の数字が少ない方が勝ちだよ。<br>だから <b>大きい数字ほど穴から遠ざける</b> のがコツ。</div>
+        <div class="nav">
+          <div class="dots"></div>
+          <button class="btn ghost" id="undoBtn">1つ戻す</button>
+          <button class="btn" id="resetBtn">最初から</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const SVGNS="http://www.w3.org/2000/svg";
+const S=92, CX=300, CY0=52, H=S*0.8660254, R=34;
+const board=document.getElementById('board');
+
+// ---- build cell geometry ----
+const CELLS=[];
+for(let r=0;r<6;r++){for(let i=0;i<=r;i++){
+  CELLS.push({r,i,id:r+'-'+i, x:CX+(i-r/2)*S, y:CY0+r*H});
+}}
+const byId=Object.fromEntries(CELLS.map(c=>[c.id,c]));
+function neighbors(r,i){
+  const cand=[[r,i-1],[r,i+1],[r-1,i-1],[r-1,i],[r+1,i],[r+1,i+1]];
+  return cand.filter(([a,b])=>a>=0&&a<6&&b>=0&&b<=a).map(([a,b])=>a+'-'+b);
+}
+
+// ---- svg element helpers ----
+function el(t,a){const e=document.createElementNS(SVGNS,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
+const linkLayer=el('g',{}); board.appendChild(linkLayer);
+const holeFxLayer=el('g',{class:'holeFx'}); board.appendChild(holeFxLayer);
+const cellEls={};
+CELLS.forEach(c=>{
+  const g=el('g',{});
+  const circ=el('circle',{cx:c.x,cy:c.y,r:R,class:'cellCircle empty'});
+  const txt=el('text',{x:c.x,y:c.y+1,class:'cellText'});
+  g.appendChild(circ);g.appendChild(txt);board.appendChild(g);
+  cellEls[c.id]={g,circ,txt};
+  circ.addEventListener('click',()=>onCellClick(c.id));
+});
+
+function paintCell(id,color,value,pop){
+  const {circ,txt}=cellEls[id];
+  circ.classList.remove('empty');
+  // inline style beats the .cellCircle{fill:#fff} stylesheet rule
+  if(color==='red'){circ.style.fill='#ffe1e6';circ.style.stroke='#e8455f';}
+  else{circ.style.fill='#dbeeff';circ.style.stroke='#2b78c4';}
+  circ.style.strokeWidth='3';
+  txt.textContent=value;
+  txt.setAttribute('fill',color==='red'?'#c72f48':'#1f66b0');
+  if(pop){txt.classList.remove('pop');void txt.offsetWidth;txt.classList.add('pop');
+    circ.classList.remove('pop');void circ.offsetWidth;circ.classList.add('pop');}
+}
+function paintHole(id,animate){
+  const {circ,txt}=cellEls[id];
+  const c=byId[id];
+  circ.classList.remove('empty','target','dim');
+  circ.style.fill='#241634';                     // inline style beats CSS
+  circ.style.stroke='#0e0720';circ.style.strokeWidth='3.5';
+  txt.textContent='';
+  holeFxLayer.appendChild(el('circle',{cx:c.x,cy:c.y,r:R-3,fill:'none',stroke:'#6a4fa0','stroke-width':2,opacity:.6}));
+  holeFxLayer.appendChild(el('circle',{cx:c.x-R*0.28,cy:c.y-R*0.32,r:R*0.24,fill:'#fff',opacity:.5}));
+  if(animate){circ.classList.remove('inkpop');void circ.offsetWidth;circ.classList.add('inkpop');}
+}
+function markTarget(id){ cellEls[id].circ.classList.add('target'); }
+
+function resetBoard(){
+  CELLS.forEach(c=>{
+    const {circ,txt}=cellEls[c.id];
+    circ.setAttribute('class','cellCircle empty');
+    circ.style.fill='';circ.style.stroke='';circ.style.strokeWidth='';  // clear -> CSS default (#fff)
+    circ.classList.remove('dim','glow','pop','inkpop','target');
+    txt.textContent='';txt.classList.remove('dim','pop');
+  });
+  linkLayer.innerHTML=''; holeFxLayer.innerHTML='';
+}
+
+/* ================= RULE MODE ================= */
+// scripted example: each color uses 1-10 once; hole at 3-1
+const EX={
+ '0-0':['red',5], '1-0':['blue',7],'1-1':['red',9],
+ '2-0':['red',8],'2-1':['blue',2],'2-2':['blue',6],
+ '3-0':['blue',5],'3-2':['red',1],'3-3':['red',4],
+ '4-0':['blue',8],'4-1':['red',3],'4-2':['blue',4],'4-3':['red',6],'4-4':['blue',3],
+ '5-0':['red',2],'5-1':['blue',1],'5-2':['red',7],'5-3':['blue',9],'5-4':['red',10],'5-5':['blue',10]
+};
+const EX_HOLE='3-1';
+const EX_NB=neighbors(3,1); // ['3-0','3-2','2-0','2-1','4-1','4-2']
+// red nb:1+8+3=12 ; blue nb:5+2+4=11
+
+const STEPS=[
+ {tag:'STEP 1 / 5', title:'紙とペンで、2人対戦！',
+  body:'三角にならんだ <b>21個の○</b> が舞台。<br>2人が <b>赤</b>・<span class="bl">青</span> にわかれて対戦するよ。',
+  render:s0},
+ {tag:'STEP 2 / 5', title:'交互に 1〜10 を書く',
+  body:'赤→青→赤→青…と交互に、自分の色で <b>1・2・3…10</b> を○の中へ。<br>2人で20個。<b>○を1つだけ空けて</b>おくよ。',
+  render:s1},
+ {tag:'STEP 3 / 5', title:'残った1マスをぬりつぶそう',
+  body:'○が1つだけ空いているね（オレンジに光ってるマス）。<br>この○を <b>ぬりつぶす</b> と…数字を吸い込む <b>ブラックホール</b> のできあがり！<br><br>👉 <b>「ぬりつぶす！」ボタン</b>を押してみよう。',
+  render:s2, action:true},
+ {tag:'STEP 4 / 5', title:'穴のとなりを、色ごとに合計',
+  body:'ブラックホールに <b>となり合った数字</b> だけを、色ごとに足すよ。<br><b>赤 = 8+1+3 = 12</b><br><span class="bl">青 = 5+2+4 = 11</span>',
+  render:s3},
+ {tag:'STEP 5 / 5', title:'小さい方の勝ち！',
+  body:'吸い込まれた数が <span class="bl">青=11</b> ＜ <b>赤=12</b> …<br>だから <span class="bl"><b>青の勝ち！</b></span><br><br>コツは <b>大きい数字ほど穴から遠ざける</b> こと。',
+  render:s4, learn:true}
+];
+let ruleHolePainted=false;
+function fillExample(){for(const id in EX)paintCell(id,EX[id][0],EX[id][1],false);}
+function s0(){resetBoard();}
+function s1(){resetBoard();fillExample();}
+function s2(){resetBoard();fillExample();
+  if(ruleHolePainted){paintHole(EX_HOLE);} else {markTarget(EX_HOLE);}}
+function s3(){resetBoard();fillExample();paintHole(EX_HOLE);highlightNb();ruleHolePainted=true;}
+function s4(){resetBoard();fillExample();paintHole(EX_HOLE);highlightNb();ruleHolePainted=true;}
+function highlightNb(){
+  const keep=new Set([EX_HOLE,...EX_NB]);
+  CELLS.forEach(c=>{ if(!keep.has(c.id)){cellEls[c.id].circ.classList.add('dim');cellEls[c.id].txt.classList.add('dim');}});
+  const hole=byId[EX_HOLE];
+  EX_NB.forEach(id=>{
+    const n=byId[id];
+    linkLayer.appendChild(el('line',{x1:hole.x,y1:hole.y,x2:n.x,y2:n.y,class:'link'}));
+    cellEls[id].circ.classList.add('glow');
+  });
+}
+let step=0;
+const dotsWrap=document.getElementById('dots');
+STEPS.forEach((_,k)=>{const d=document.createElement('span');d.className='dot';dotsWrap.appendChild(d);});
+const actBtn=document.getElementById('actBtn');
+function renderStep(){
+  if(step<2) ruleHolePainted=false;   // re-arm the paint action when going back
+  const s=STEPS[step];
+  document.getElementById('stepTag').textContent=s.tag;
+  document.getElementById('stepTitle').innerHTML=s.title;
+  document.getElementById('stepBody').innerHTML=s.body;
+  document.getElementById('learnChips').style.display=s.learn?'flex':'none';
+  s.render();
+  actBtn.style.display=(s.action && !ruleHolePainted)?'inline-block':'none';
+  [...dotsWrap.children].forEach((d,k)=>d.classList.toggle('on',k===step));
+  document.getElementById('prevBtn').disabled=(step===0);
+  const nb=document.getElementById('nextBtn');
+  nb.textContent=(step===STEPS.length-1)?'もう一度 ↺':'つぎへ ▶';
+}
+actBtn.onclick=()=>{
+  paintHole(EX_HOLE,true); ruleHolePainted=true; actBtn.style.display='none';
+};
+document.getElementById('nextBtn').onclick=()=>{step=(step+1)%STEPS.length;renderStep();};
+document.getElementById('prevBtn').onclick=()=>{if(step>0){step--;renderStep();}};
+
+/* ================= PLAY MODE ================= */
+let play=false, state=null;
+function newGame(){
+  state={board:{},turn:'red',redNext:1,blueNext:1,placed:0,finished:false,history:[]};
+  resetBoard();
+  document.getElementById('scoreWrap').style.display='none';
+  document.getElementById('resultMsg').textContent='';
+  document.getElementById('scoreRed').classList.remove('win');
+  document.getElementById('scoreBlue').classList.remove('win');
+  updateTurn();
+}
+function updateTurn(){
+  const t=state.turn;
+  const bar=document.getElementById('turnBar');
+  bar.className='turnbar '+(t==='red'?'turn-red':'turn-blue');
+  document.getElementById('whoBubble').textContent=t==='red'?'赤':'青';
+  const num=t==='red'?state.redNext:state.blueNext;
+  document.getElementById('turnText').innerHTML=
+    (t==='red'?'赤':'青')+'の番　→　<span class="num">'+num+'</span> を書こう';
+}
+function onCellClick(id){
+  if(!play||state.finished)return;
+  if(cellEls[id].circ.classList.contains('empty')===false)return;
+  if(state.placed>=20)return;
+  const t=state.turn;
+  const val=t==='red'?state.redNext++:state.blueNext++;
+  state.board[id]={color:t,value:val};
+  state.history.push(id);
+  paintCell(id,t,val,true);
+  state.placed++;
+  state.turn=t==='red'?'blue':'red';
+  if(state.placed>=20){ finishGame(); } else { updateTurn(); }
+}
+function finishGame(){
+  state.finished=true;
+  const holeId=CELLS.map(c=>c.id).find(id=>!(id in state.board));
+  state.hole=holeId;
+  document.getElementById('turnText').innerHTML='最後の1マスがブラックホールに…🕳️';
+  document.getElementById('turnBar').className='turnbar';
+  setTimeout(()=>{
+    paintHole(holeId);
+    const nb=neighbors(...holeId.split('-').map(Number));
+    let rs=0,bs=0;
+    const hole=byId[holeId];
+    nb.forEach(nid=>{
+      const cell=state.board[nid]; if(!cell)return;
+      if(cell.color==='red')rs+=cell.value; else bs+=cell.value;
+      linkLayer.appendChild(el('line',{x1:hole.x,y1:hole.y,x2:byId[nid].x,y2:byId[nid].y,class:'link'}));
+      cellEls[nid].circ.classList.add('glow');
+    });
+    CELLS.forEach(c=>{ if(c.id!==holeId&&!nb.includes(c.id)){cellEls[c.id].circ.classList.add('dim');cellEls[c.id].txt.classList.add('dim');}});
+    document.getElementById('scoreWrap').style.display='flex';
+    document.getElementById('valRed').textContent=rs;
+    document.getElementById('valBlue').textContent=bs;
+    const msg=document.getElementById('resultMsg');
+    const sr=document.getElementById('scoreRed'), sb=document.getElementById('scoreBlue');
+    if(rs<bs){msg.innerHTML='🎉 <span style="color:#e8455f">赤の勝ち！</span>';sr.classList.add('win');}
+    else if(bs<rs){msg.innerHTML='🎉 <span style="color:#2b78c4">青の勝ち！</span>';sb.classList.add('win');}
+    else{msg.textContent='🤝 引き分け！';}
+  },650);
+}
+document.getElementById('resetBtn').onclick=()=>{if(play)newGame();};
+document.getElementById('undoBtn').onclick=()=>{
+  if(!play||state.finished||state.history.length===0)return;
+  const id=state.history.pop();
+  const cell=state.board[id];
+  if(cell.color==='red')state.redNext--; else state.blueNext--;
+  delete state.board[id];
+  const {circ,txt}=cellEls[id];
+  circ.setAttribute('class','cellCircle empty');
+  circ.style.fill='';circ.style.stroke='';circ.style.strokeWidth='';
+  txt.textContent='';
+  state.placed--; state.turn=cell.color;
+  updateTurn();
+};
+
+/* ================= TAB SWITCH ================= */
+function setMode(mode){
+  play=(mode==='play');
+  document.getElementById('tabRule').classList.toggle('on',!play);
+  document.getElementById('tabPlay').classList.toggle('on',play);
+  document.getElementById('rulePanel').style.display=play?'none':'flex';
+  document.getElementById('playPanel').style.display=play?'flex':'none';
+  board.classList.toggle('play',play);
+  if(play){newGame();} else {renderStep();}
+}
+document.getElementById('tabRule').onclick=()=>setMode('rule');
+document.getElementById('tabPlay').onclick=()=>setMode('play');
+
+renderStep();
+</script>
